@@ -50,9 +50,9 @@ const TradingSimulator = () => {
 
       {/* Main Trading Interface */}
       <div className="container mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+        <div className="flex flex-col xl:flex-row xl:gap-6 xl:items-stretch">
   {/* Left Column - Chart */}
-  <div className="xl:col-span-8 space-y-6">
+  <div className="xl:w-2/3 flex flex-col space-y-6 h-full">
     <AdvancedTradingChart asset={selectedAsset} mode={simulationMode} />
     <TradeHistory />
     
@@ -60,10 +60,15 @@ const TradingSimulator = () => {
     <div className="xl:hidden">
       <PerformanceSummary />
     </div>
+
+     {/* Desktop: Performance Summary */}
+    <div className="hidden xl:block">
+      <PerformanceSummary />
+    </div>
   </div>
 
   {/* Right Column - Trading Controls */}
-  <div className="xl:col-span-4 space-y-6">
+  <div className="xl:w-1/3 flex flex-col space-y-6 h-full">
     <BuySellPanel 
       asset={selectedAsset}
       onTradeExecuted={(emotion) => setCurrentEmotion(emotion)}
@@ -73,11 +78,6 @@ const TradingSimulator = () => {
       onEmotionChange={setCurrentEmotion}
     />
     <TradeFeedbackPanel currentEmotion={currentEmotion} />
-
-    {/* Desktop: Performance Summary */}
-    <div className="hidden xl:block">
-      <PerformanceSummary />
-    </div>
   </div>
 </div>
 
