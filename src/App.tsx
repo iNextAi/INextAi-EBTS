@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import TradingSimulator from "./pages/TradingSimulator";
 import CopilotPage from "./pages/CopilotPage";
 import NotFound from "./pages/NotFound";
+import LandingPage from "./pages/LandingPage";
 
 const queryClient = new QueryClient();
 
@@ -17,15 +18,21 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
+          {/* 👇 NEW LANDING PAGE */}
+          <Route path="/" element={<LandingPage />} />
+          
+          {/* 🔄 MOVED DASHBOARD TO ITS OWN ROUTE */}
+          <Route path="/dashboard" element={<Index />} />
+
+          {/* Your existing routes */}
           <Route path="/trading" element={<TradingSimulator />} />
           <Route path="/copilot" element={<CopilotPage />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
 );
+
 
 export default App;

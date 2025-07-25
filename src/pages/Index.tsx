@@ -6,9 +6,20 @@ import { AdvancedPerformanceChart } from "@/components/dashboard/AdvancedPerform
 import { RealTimeTradeFeed } from "@/components/dashboard/RealTimeTradeFeed";
 import { AIInsightCards } from "@/components/dashboard/AIInsightCards";
 import { RecentActivities } from "@/components/dashboard/RecentActivities";
+import HeroSection from "@/components/LandingPage/HeroSection";
+import TradingChart from "@/components/LandingPage/TradingChart";
+import FeatureHighlights from "@/components/LandingPage/FeatureHighlights";
+import Footer from "@/components/LandingPage/Footer";
 
 const Index = () => {
   return (
+    <div className="min-h-screen bg-background">
+      <HeroSection />
+      <TradingChart />
+      <FeatureHighlights />
+      <Footer />
+    </div>
+  );
     <DashboardLayout>
       <div className="space-y-4 md:space-y-6">
         {/* Top Row - Performance Overview */}
@@ -35,7 +46,6 @@ const Index = () => {
         <RealTimeTradeFeed />
       </div>
     </DashboardLayout>
-  );
 };
 
 export default Index;
