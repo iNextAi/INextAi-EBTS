@@ -1,7 +1,11 @@
 import { Button } from "@/components/LandingPageUI/button";
 import { Brain, Wallet, TrendingUp } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
-
+import { Card } from "@/components/LandingPageUI/card";
+import { Input } from "@/components/LandingPageUI/input";
+import { Tooltip } from "@/components/LandingPageUI/tooltip";
+import INextAiLogo from "@/assets/inextai-logo.png";
+import ICPLogo from "@/assets/ICP.png";
 const HeroSection = () => {
   return (
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
@@ -16,10 +20,19 @@ const HeroSection = () => {
       
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center max-w-4xl mx-auto">
-          {/* AI Badge */}
+          {/* Logo */}
           <div className="inline-flex items-center gap-2 glass-card px-4 py-2 rounded-full mb-8">
-            <Brain className="w-5 h-5 text-primary" />
-            <span className="text-sm font-medium">Powered by iNextAI</span>
+          <img
+          src={INextAiLogo}
+          alt="iNextAi Logo"
+          className="h-12 w-auto rounded-full"
+          />
+          <span className="text-sm font-medium">Powered by ICP</span>
+          <img
+          src={ICPLogo}
+          alt="ICP Logo"
+          className="h-12 w-auto rounded-full"
+          />
           </div>
           
           {/* Main Title */}
