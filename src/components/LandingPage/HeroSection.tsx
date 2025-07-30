@@ -1,6 +1,6 @@
 import { Button } from "@/components/LandingPageUI/button";
 import { Brain, Wallet, TrendingUp } from "lucide-react";
-import { ThemeToggle } from "./ThemeToggle";
+
 import { Card } from "@/components/LandingPageUI/card";
 import { Input } from "@/components/LandingPageUI/input";
 import { Tooltip } from "@/components/LandingPageUI/tooltip";
@@ -11,7 +11,7 @@ const HeroSection = () => {
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
       {/* Theme Toggle */}
       <div className="absolute top-8 right-8 z-20">
-        <ThemeToggle />
+        
       </div>
       {/* Background Effects */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/5" />

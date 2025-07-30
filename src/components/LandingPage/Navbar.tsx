@@ -1,43 +1,29 @@
 import { Link } from "react-router-dom";
-import { ThemeToggle } from "@/components/LandingPage/ThemeToggle";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Bell } from "lucide-react";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/LandingPageUI/avatar";
-
-
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/LandingPageUI/avatar";
 
 const Navbar = () => {
   return (
-    <header className="w-full px-6 py-4 flex items-center justify-between bg-background border-b border-border sticky top-0 z-50">
-      {/* Left - Logo or Brand */}
-      <Link to="/" className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+    <nav className="w-full px-6 py-4 flex items-center justify-between border-b border-border">
+      {/* Left: Logo */}
+      <Link to="/" className="text-2xl font-bold text-primary">
         iNextAi
       </Link>
 
-      {/* Right - Actions */}
-      <div className="flex items-center gap-6">
-        {/* Dashboard Link */}
-        
-        <Link
-          to="/dashboard"
-          className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
-        >
+      {/* Right: Nav items */}
+      <div className="flex items-center gap-4">
+        <Link to="/dashboard" className="text-sm text-muted-foreground hover:text-primary transition-colors">
           Dashboard
         </Link>
-
-        {/* Notification Bell */}
-        <button className="relative hover:text-primary transition-colors">
-          <Bell className="h-5 w-5" />
-          {/* Notification dot */}
-          <span className="absolute top-0 right-0 inline-block w-2 h-2 bg-red-500 rounded-full" />
-        </button>
-
-        {/* Avatar */}
+        <ThemeToggle />
+        <Bell className="w-5 h-5 text-muted-foreground" />
         <Avatar>
-          <AvatarImage src="https://api.dicebear.com/7.x/initials/svg?seed=AI" alt="User Avatar" />
-          <AvatarFallback>AI</AvatarFallback>
+          <AvatarImage src="/avatar.jpg" alt="User" />
+          <AvatarFallback>IA</AvatarFallback>
         </Avatar>
       </div>
-    </header>
+    </nav>
   );
 };
 
