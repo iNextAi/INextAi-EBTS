@@ -1,6 +1,8 @@
+import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, TrendingDown } from "lucide-react";
+import axios from "axios";
 
 interface TradingChartProps {
   asset: string;
@@ -8,15 +10,34 @@ interface TradingChartProps {
 }
 
 export const TradingChart = ({ asset, mode }: TradingChartProps) => {
-  // Mock price data
-  const currentPrice = asset === "BTC" ? 42850.32 : asset === "ETH" ? 2641.18 : 98.45;
-  const change24h = asset === "BTC" ? 3.42 : asset === "ETH" ? -1.28 : 5.67;
-  const isPositive = change24h > 0;
+  const [price, setPrice] = useState<number | null>(null);
+  const [priceChange, setPriceChange] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchLivePrice = async () => {
+      try {
+        const pair = `${asset}USDT`; // e.g., BTCUSDT, ETHUSDT, ICPUSDT
+        const response = await axios.get(
+          `https://api.binance.com/api/v3/ticker/24hr?symbol=${pair}`
+        );
+        setPrice(parseFloat(response.data.lastPrice));
+        setPriceChange(parseFloat(response.data.priceChangePercent));
+      } catch (error) {
+        console.error("Error fetching live price data:", error);
+      }
+    };
+
+    fetchLivePrice();
+    const interval = setInterval(fetchLivePrice, 10000); // update every 10s
+
+    return () => clearInterval(interval);
+  }, [asset]);
+
+  const isPositive = (priceChange ?? 0) > 0;
 
   return (
     <Card className="glass-card h-full min-h-[400px] lg:min-h-[500px] p-6">
       <div className="flex flex-col h-full">
-        
         {/* Chart Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
           <div className="flex items-center gap-4">
@@ -24,20 +45,29 @@ export const TradingChart = ({ asset, mode }: TradingChartProps) => {
               <h3 className="text-2xl font-bold text-foreground">{asset}/USDT</h3>
               <div className="flex items-center gap-2 mt-1">
                 <span className="text-3xl font-mono font-bold text-foreground">
-                  ${currentPrice.toLocaleString()}
+                  {price !== null ? `$${price.toLocaleString(undefined, { maximumFractionDigits: 6 })}` : "Loading..."}
                 </span>
-                <div className={`flex items-center gap-1 px-2 py-1 rounded-md ${
-                  isPositive ? 'bg-success/20 text-success' : 'bg-destructive/20 text-destructive'
-                }`}>
-                  {isPositive ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
-                  <span className="text-sm font-medium">
-                    {isPositive ? '+' : ''}{change24h}%
-                  </span>
-                </div>
+                {priceChange !== null && (
+                  <div
+                    className={`flex items-center gap-1 px-2 py-1 rounded-md ${
+                      isPositive ? "bg-success/20 text-success" : "bg-destructive/20 text-destructive"
+                    }`}
+                  >
+                    {isPositive ? (
+                      <TrendingUp className="h-4 w-4" />
+                    ) : (
+                      <TrendingDown className="h-4 w-4" />
+                    )}
+                    <span className="text-sm font-medium">
+                      {isPositive ? "+" : ""}
+                      {priceChange.toFixed(2)}%
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-2">
             <Badge variant="secondary" className="bg-primary/20 text-primary">
               {mode.charAt(0).toUpperCase() + mode.slice(1)} Mode
@@ -48,11 +78,9 @@ export const TradingChart = ({ asset, mode }: TradingChartProps) => {
           </div>
         </div>
 
-        {/* Chart Area - Placeholder for TradingView */}
+        {/* Chart Area - Placeholder */}
         <div className="flex-1 relative">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 rounded-lg border border-border/20">
-            
-            {/* Mock Chart Visualization */}
             <div className="flex items-end justify-center h-full p-8">
               {Array.from({ length: 50 }, (_, i) => {
                 const height = Math.random() * 80 + 20;
@@ -61,7 +89,7 @@ export const TradingChart = ({ asset, mode }: TradingChartProps) => {
                   <div
                     key={i}
                     className={`w-2 mx-0.5 rounded-t transition-all duration-300 ${
-                      isUp ? 'bg-success/60' : 'bg-destructive/60'
+                      isUp ? "bg-success/60" : "bg-destructive/60"
                     }`}
                     style={{ height: `${height}%` }}
                   />
@@ -69,7 +97,7 @@ export const TradingChart = ({ asset, mode }: TradingChartProps) => {
               })}
             </div>
 
-            {/* Chart Overlay */}
+            {/* Overlay */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center space-y-2">
                 <div className="text-6xl">📈</div>
@@ -84,11 +112,11 @@ export const TradingChart = ({ asset, mode }: TradingChartProps) => {
           </div>
         </div>
 
-        {/* Chart Controls */}
+        {/* Timeframe + Volume */}
         <div className="flex items-center justify-between mt-4 pt-4 border-t border-border/20">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <span>Timeframe:</span>
-            {['1m', '5m', '15m', '1h', '4h', '1d'].map((tf) => (
+            {["1m", "5m", "15m", "1h", "4h", "1d"].map((tf) => (
               <button
                 key={tf}
                 className="px-3 py-1 rounded-md hover:bg-primary/10 hover:text-primary transition-colors"
@@ -97,7 +125,7 @@ export const TradingChart = ({ asset, mode }: TradingChartProps) => {
               </button>
             ))}
           </div>
-          
+
           <div className="text-sm text-muted-foreground">
             Volume: {(Math.random() * 1000000).toFixed(0)} {asset}
           </div>
