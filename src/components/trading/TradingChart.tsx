@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, TrendingDown } from "lucide-react";
+import { RealtimeCandlestickChart } from "@/components/trading/RealtimeCandlestickChart";
 import axios from "axios";
 
 interface TradingChartProps {
@@ -16,7 +17,7 @@ export const TradingChart = ({ asset, mode }: TradingChartProps) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const symbol = `${asset}USDT`.toUpperCase(); // "BTCUSDT", "ETHUSDT", etc.
+      const symbol = `${asset}USDT`.toUpperCase(); // e.g. ICPUSDT
       try {
         const response = await axios.get(
           `https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}`
@@ -25,13 +26,13 @@ export const TradingChart = ({ asset, mode }: TradingChartProps) => {
         setPriceChange(parseFloat(response.data.priceChangePercent));
         setError(false);
       } catch (err) {
-        console.error("Failed to fetch price for", symbol, err);
+        console.error(`❌ Failed to fetch price for ${symbol}`, err);
         setError(true);
       }
     };
 
     fetchData();
-    const interval = setInterval(fetchData, 10000); // every 10s
+    const interval = setInterval(fetchData, 10000); // every 10 sec
 
     return () => clearInterval(interval);
   }, [asset]);
@@ -41,7 +42,8 @@ export const TradingChart = ({ asset, mode }: TradingChartProps) => {
   return (
     <Card className="glass-card h-full min-h-[400px] lg:min-h-[500px] p-6">
       <div className="flex flex-col h-full">
-        {/* Chart Header */}
+
+        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
           <div className="flex items-center gap-4">
             <div>
@@ -62,11 +64,7 @@ export const TradingChart = ({ asset, mode }: TradingChartProps) => {
                       isPositive ? "bg-success/20 text-success" : "bg-destructive/20 text-destructive"
                     }`}
                   >
-                    {isPositive ? (
-                      <TrendingUp className="h-4 w-4" />
-                    ) : (
-                      <TrendingDown className="h-4 w-4" />
-                    )}
+                    {isPositive ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
                     <span className="text-sm font-medium">
                       {isPositive ? "+" : ""}
                       {priceChange.toFixed(2)}%
@@ -81,44 +79,15 @@ export const TradingChart = ({ asset, mode }: TradingChartProps) => {
             <Badge variant="secondary" className="bg-primary/20 text-primary">
               {mode.charAt(0).toUpperCase() + mode.slice(1)} Mode
             </Badge>
-            <Badge variant="outline" className="border-border/50">
-              Simulated
-            </Badge>
+            <Badge variant="outline" className="border-border/50">Simulated</Badge>
           </div>
         </div>
 
-        {/* Mock Chart Area */}
-        <div className="flex-1 relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 rounded-lg border border-border/20">
-            <div className="flex items-end justify-center h-full p-8">
-              {Array.from({ length: 50 }, (_, i) => {
-                const height = Math.random() * 80 + 20;
-                const isUp = Math.random() > 0.5;
-                return (
-                  <div
-                    key={i}
-                    className={`w-2 mx-0.5 rounded-t ${
-                      isUp ? "bg-success/60" : "bg-destructive/60"
-                    }`}
-                    style={{ height: `${height}%` }}
-                  />
-                );
-              })}
-            </div>
-
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center space-y-2">
-                <div className="text-6xl">📈</div>
-                <div className="text-lg font-semibold text-muted-foreground">
-                  TradingView Chart Coming Soon
-                </div>
-                <div className="text-sm text-muted-foreground max-w-md">
-                  Real-time {asset} charting will go here. Currently using simulated visual.
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* Chart Area */}
+        {/* Real-Time Candlestick Chart */}
+<div className="flex-1 relative">
+  <RealtimeCandlestickChart symbol={`${asset}USDT`} interval="5m" />
+</div>
 
         {/* Footer Controls */}
         <div className="flex items-center justify-between mt-4 pt-4 border-t border-border/20">
