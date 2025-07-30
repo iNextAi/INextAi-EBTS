@@ -8,6 +8,7 @@ import TradingSimulator from "./pages/TradingSimulator";
 import CopilotPage from "./pages/CopilotPage";
 import NotFound from "./pages/NotFound";
 import LandingPage from "./pages/LandingPage";
+import Dashboard from "./pages/Dashboard";
 
 const queryClient = new QueryClient();
 
@@ -22,7 +23,7 @@ const App = () => (
           <Route path="/" element={<LandingPage />} />
           
           {/* 🔄 MOVED DASHBOARD TO ITS OWN ROUTE */}
-          <Route path="/dashboard" element={<Index />} />
+          <Route path="/dashboard" element={<Dashboard />} />
 
           {/* Your existing routes */}
           <Route path="/trading" element={<TradingSimulator />} />
