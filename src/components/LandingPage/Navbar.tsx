@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
+import { ThemeToggle } from "@/components/LandingPage/ThemeToggle";
 import { Bell } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/LandingPageUI/avatar";
+
+
 
 const Navbar = () => {
   return (
@@ -13,6 +16,7 @@ const Navbar = () => {
       {/* Right - Actions */}
       <div className="flex items-center gap-6">
         {/* Dashboard Link */}
+        
         <Link
           to="/dashboard"
           className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"

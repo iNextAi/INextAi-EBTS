@@ -13,7 +13,7 @@ import Navbar from "@/components/LandingPage/Navbar";
 const LandingPage = () => {
   return (
       <div className="min-h-screen bg-background">
-        <Navbar />
+      <Navbar />
       <HeroSection />
       <TradingChart />
       <FeatureHighlights />
