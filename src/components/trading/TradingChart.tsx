@@ -5,35 +5,38 @@ import { TrendingUp, TrendingDown } from "lucide-react";
 import axios from "axios";
 
 interface TradingChartProps {
-  asset: string;
+  asset: string; // e.g. "BTC", "ETH", "ICP"
   mode: string;
 }
 
 export const TradingChart = ({ asset, mode }: TradingChartProps) => {
   const [price, setPrice] = useState<number | null>(null);
   const [priceChange, setPriceChange] = useState<number | null>(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    const fetchLivePrice = async () => {
+    const fetchData = async () => {
+      const symbol = `${asset}USDT`.toUpperCase(); // "BTCUSDT", "ETHUSDT", etc.
       try {
-        const pair = `${asset}USDT`; // e.g., BTCUSDT, ETHUSDT, ICPUSDT
         const response = await axios.get(
-          `https://api.binance.com/api/v3/ticker/24hr?symbol=${pair}`
+          `https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}`
         );
         setPrice(parseFloat(response.data.lastPrice));
         setPriceChange(parseFloat(response.data.priceChangePercent));
-      } catch (error) {
-        console.error("Error fetching live price data:", error);
+        setError(false);
+      } catch (err) {
+        console.error("Failed to fetch price for", symbol, err);
+        setError(true);
       }
     };
 
-    fetchLivePrice();
-    const interval = setInterval(fetchLivePrice, 10000); // update every 10s
+    fetchData();
+    const interval = setInterval(fetchData, 10000); // every 10s
 
     return () => clearInterval(interval);
   }, [asset]);
 
-  const isPositive = (priceChange ?? 0) > 0;
+  const isPositive = (priceChange ?? 0) >= 0;
 
   return (
     <Card className="glass-card h-full min-h-[400px] lg:min-h-[500px] p-6">
@@ -45,9 +48,15 @@ export const TradingChart = ({ asset, mode }: TradingChartProps) => {
               <h3 className="text-2xl font-bold text-foreground">{asset}/USDT</h3>
               <div className="flex items-center gap-2 mt-1">
                 <span className="text-3xl font-mono font-bold text-foreground">
-                  {price !== null ? `$${price.toLocaleString(undefined, { maximumFractionDigits: 6 })}` : "Loading..."}
+                  {error
+                    ? "Unavailable"
+                    : price !== null
+                    ? `$${price.toLocaleString(undefined, {
+                        maximumFractionDigits: 6,
+                      })}`
+                    : "Loading..."}
                 </span>
-                {priceChange !== null && (
+                {priceChange !== null && !error && (
                   <div
                     className={`flex items-center gap-1 px-2 py-1 rounded-md ${
                       isPositive ? "bg-success/20 text-success" : "bg-destructive/20 text-destructive"
@@ -78,7 +87,7 @@ export const TradingChart = ({ asset, mode }: TradingChartProps) => {
           </div>
         </div>
 
-        {/* Chart Area - Placeholder */}
+        {/* Mock Chart Area */}
         <div className="flex-1 relative">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 rounded-lg border border-border/20">
             <div className="flex items-end justify-center h-full p-8">
@@ -88,7 +97,7 @@ export const TradingChart = ({ asset, mode }: TradingChartProps) => {
                 return (
                   <div
                     key={i}
-                    className={`w-2 mx-0.5 rounded-t transition-all duration-300 ${
+                    className={`w-2 mx-0.5 rounded-t ${
                       isUp ? "bg-success/60" : "bg-destructive/60"
                     }`}
                     style={{ height: `${height}%` }}
@@ -97,35 +106,33 @@ export const TradingChart = ({ asset, mode }: TradingChartProps) => {
               })}
             </div>
 
-            {/* Overlay */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center space-y-2">
                 <div className="text-6xl">📈</div>
                 <div className="text-lg font-semibold text-muted-foreground">
-                  TradingView Chart Integration
+                  TradingView Chart Coming Soon
                 </div>
                 <div className="text-sm text-muted-foreground max-w-md">
-                  Real-time {asset} price data and advanced charting tools will be integrated here
+                  Real-time {asset} charting will go here. Currently using simulated visual.
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Timeframe + Volume */}
+        {/* Footer Controls */}
         <div className="flex items-center justify-between mt-4 pt-4 border-t border-border/20">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <span>Timeframe:</span>
             {["1m", "5m", "15m", "1h", "4h", "1d"].map((tf) => (
               <button
                 key={tf}
-                className="px-3 py-1 rounded-md hover:bg-primary/10 hover:text-primary transition-colors"
+                className="px-3 py-1 rounded-md hover:bg-primary/10 hover:text-primary"
               >
                 {tf}
               </button>
             ))}
           </div>
-
           <div className="text-sm text-muted-foreground">
             Volume: {(Math.random() * 1000000).toFixed(0)} {asset}
           </div>
