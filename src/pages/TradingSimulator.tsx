@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { AdvancedTradingChart } from "@/components/trading/AdvancedTradingChart";
 import { BuySellPanel } from "@/components/trading/BuySellPanel";
@@ -10,12 +10,33 @@ import { TradeHistory } from "@/components/trading/TradeHistory";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const TradingSimulator = () => {
   const navigate = useNavigate();
   const [selectedAsset, setSelectedAsset] = useState("BTC");
   const [simulationMode, setSimulationMode] = useState("live");
   const [currentEmotion, setCurrentEmotion] = useState("");
+  const [livePrice, setLivePrice] = useState<number | null>(null);
+
+  // Fetch live price from Binance
+  useEffect(() => {
+    const fetchPrice = async () => {
+      try {
+        const pair = `${selectedAsset}USDT`;
+        const res = await axios.get(
+          `https://api.binance.com/api/v3/ticker/price?symbol=${pair}`
+        );
+        setLivePrice(parseFloat(res.data.price));
+      } catch (err) {
+        console.error("Error fetching live price", err);
+      }
+    };
+
+    fetchPrice();
+    const interval = setInterval(fetchPrice, 10000); // every 10 sec
+    return () => clearInterval(interval);
+  }, [selectedAsset]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -24,9 +45,9 @@ const TradingSimulator = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => navigate("/")}
                 className="hover:bg-primary/10"
               >
@@ -34,53 +55,61 @@ const TradingSimulator = () => {
                 Back to Dashboard
               </Button>
               <div>
-                <h1 className="text-2xl font-bold text-foreground">Trading Simulator</h1>
-                <p className="text-sm text-muted-foreground">Practice crypto trading & analyze your emotions</p>
+                <h1 className="text-2xl font-bold text-foreground">
+                  Trading Simulator
+                </h1>
+                <p className="text-sm text-muted-foreground">
+                  Practice crypto trading & analyze your emotions
+                </p>
               </div>
             </div>
-            <AssetSelector 
+
+            <AssetSelector
               selectedAsset={selectedAsset}
               onAssetChange={setSelectedAsset}
               simulationMode={simulationMode}
               onModeChange={setSimulationMode}
             />
           </div>
+
+          {/* 🔥 Live Price Line */}
+          {livePrice !== null && (
+            <div className="mt-4 px-4 text-sm text-muted-foreground">
+              <span className="font-semibold text-foreground">{selectedAsset}/USDT:</span>{" "}
+              ${livePrice.toLocaleString(undefined, { maximumFractionDigits: 6 })}
+            </div>
+          )}
         </div>
       </div>
 
       {/* Main Trading Interface */}
       <div className="container mx-auto px-4 py-6">
         <div className="flex flex-col xl:flex-row xl:gap-6 xl:items-stretch">
-  {/* Left Column - Chart */}
-  <div className="xl:w-2/3 flex flex-col space-y-6 h-full">
-    <AdvancedTradingChart asset={selectedAsset} mode={simulationMode} />
-    <TradeHistory />
-    
-    {/* Mobile: Performance Summary */}
-    <div className="xl:hidden">
-      <PerformanceSummary />
-    </div>
+          {/* Left Column - Chart */}
+          <div className="xl:w-2/3 flex flex-col space-y-6 h-full">
+            <AdvancedTradingChart asset={selectedAsset} mode={simulationMode} />
+            <TradeHistory />
+            <div className="xl:hidden">
+              <PerformanceSummary />
+            </div>
+            <div className="hidden xl:block">
+              <PerformanceSummary />
+            </div>
+          </div>
 
-     {/* Desktop: Performance Summary */}
-    <div className="hidden xl:block">
-      <PerformanceSummary />
-    </div>
-  </div>
-
-  {/* Right Column - Trading Controls */}
-  <div className="xl:w-1/3 flex flex-col space-y-6 h-full">
-    <BuySellPanel 
-      asset={selectedAsset}
-      onTradeExecuted={(emotion) => setCurrentEmotion(emotion)}
-    />
-    <EmotionTracker 
-      currentEmotion={currentEmotion}
-      onEmotionChange={setCurrentEmotion}
-    />
-    <TradeFeedbackPanel currentEmotion={currentEmotion} />
-  </div>
-</div>
-
+          {/* Right Column - Trading Controls */}
+          <div className="xl:w-1/3 flex flex-col space-y-6 h-full">
+            <BuySellPanel
+              asset={selectedAsset}
+              onTradeExecuted={(emotion) => setCurrentEmotion(emotion)}
+            />
+            <EmotionTracker
+              currentEmotion={currentEmotion}
+              onEmotionChange={setCurrentEmotion}
+            />
+            <TradeFeedbackPanel currentEmotion={currentEmotion} />
+          </div>
+        </div>
       </div>
     </div>
   );
