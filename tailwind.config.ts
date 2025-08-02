@@ -1,86 +1,70 @@
-import type { Config } from "tailwindcss";
+import { type Config } from "tailwindcss";
 
 const config: Config = {
-  darkMode: ["class"],
+  darkMode: "class", // keep using class-based toggle
   content: [
-    "./pages/**/*.{ts,tsx}",
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
+    "./pages/**/*.{ts,tsx}",
   ],
   theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
-    },
     extend: {
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        // Core HSL theme vars (used in ThemeProvider toggle)
+        border: "hsl(var(--border, 215 30% 17%))",
+        input: "hsl(var(--input, 215 30% 17%))",
+        ring: "hsl(var(--ring, 221 83% 53%))",
+        background: "hsl(var(--background, 222 47% 7%))",
+        foreground: "hsl(var(--foreground, 210 40% 98%))",
 
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "hsl(var(--primary, 242 82% 67%))", // neon purple
+          foreground: "hsl(var(--primary-foreground, 0 0% 100%))",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          DEFAULT: "hsl(var(--secondary, 173 80% 41%))", // neon teal
+          foreground: "hsl(var(--secondary-foreground, 0 0% 100%))",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: "hsl(var(--accent, 48 96% 60%))", // bright yellow
+          foreground: "hsl(var(--accent-foreground, 0 0% 10%))",
         },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+        destructive: {
+          DEFAULT: "hsl(var(--destructive, 0 84% 60%))",
+          foreground: "hsl(var(--destructive-foreground, 0 0% 100%))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted, 215 20% 20%))",
+          foreground: "hsl(var(--muted-foreground, 215 15% 65%))",
         },
         card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+          DEFAULT: "hsl(var(--card, 220 39% 11%))",
+          foreground: "hsl(var(--card-foreground, 0 0% 100%))",
         },
-        sidebar: {
-          DEFAULT: "hsl(var(--sidebar-background))",
-          foreground: "hsl(var(--sidebar-foreground))",
-          primary: "hsl(var(--sidebar-primary))",
-          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-          accent: "hsl(var(--sidebar-accent))",
-          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
-          border: "hsl(var(--sidebar-border))",
-          ring: "hsl(var(--sidebar-ring))",
-        },
+        success: "hsl(var(--success, 142 76% 36%))",
       },
+
       borderRadius: {
         lg: "1rem",
-        md: "0.5rem",
-        sm: "0.25rem",
+        xl: "1.25rem",
+        "2xl": "1.5rem",
       },
+
+      boxShadow: {
+        neon: "0 0 20px rgba(99, 102, 241, 0.5)", // purple glow
+        glow: "0 0 15px hsla(var(--primary, 242 82% 67%), 0.7)",
+      },
+
       keyframes: {
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
+        "neon-pulse": {
+          "0%, 100%": { boxShadow: "0 0 10px hsla(var(--primary), 0.5)" },
+          "50%": { boxShadow: "0 0 20px hsla(var(--primary), 1)" },
         },
       },
+
       animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
+        "neon-pulse": "neon-pulse 2s ease-in-out infinite",
       },
     },
   },
