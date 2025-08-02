@@ -1,6 +1,5 @@
 import { Button } from "@/components/LandingPageUI/button";
 import { Brain, Wallet, TrendingUp } from "lucide-react";
-
 import { Card } from "@/components/LandingPageUI/card";
 import { Input } from "@/components/LandingPageUI/input";
 import { Tooltip } from "@/components/LandingPageUI/tooltip";
