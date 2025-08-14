@@ -10,6 +10,7 @@ import FeatureHighlights from "@/components/LandingPage/FeatureHighlights";
 import Footer from "@/components/LandingPage/Footer";
 import Navbar from "@/components/LandingPage/Navbar";
 
+
 const LandingPage = () => {
   return (
       <div className="min-h-screen bg-background">
