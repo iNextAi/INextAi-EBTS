@@ -5,10 +5,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import TradingSimulator from "./pages/TradingSimulator";
+import TradingSimulatorNew from "./pages/TradingSimulatorNew";
+import PortfolioPage from "./pages/PortfolioPage";
+import TradingJournal from "./pages/TradingJournal";
 import CopilotPage from "./pages/CopilotPage";
 import NotFound from "./pages/NotFound";
-import LandingPage from "./pages/LandingPage";
-import Dashboard from "./pages/Dashboard";
 
 const queryClient = new QueryClient();
 
@@ -19,21 +20,18 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          {/* 👇 NEW LANDING PAGE */}
-          <Route path="/" element={<LandingPage />} />
-          
-          {/* 🔄 MOVED DASHBOARD TO ITS OWN ROUTE */}
-          <Route path="/dashboard" element={<Dashboard />} />
-
-          {/* Your existing routes */}
+          <Route path="/" element={<Index />} />
           <Route path="/trading" element={<TradingSimulator />} />
+          <Route path="/trading-new" element={<TradingSimulatorNew />} />
+          <Route path="/portfolio" element={<PortfolioPage />} />
+          <Route path="/journal" element={<TradingJournal />} />
           <Route path="/copilot" element={<CopilotPage />} />
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
 );
-
 
 export default App;

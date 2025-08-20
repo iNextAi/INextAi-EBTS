@@ -1,3 +1,5 @@
+// TradingSimulator.tsx
+
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -15,15 +17,6 @@ import { PerformanceSummary } from "@/components/trading/PerformanceSummary";
 import { AssetSelector } from "@/components/trading/AssetSelector";
 import { TradeHistory } from "@/components/trading/TradeHistory";
 
-/** -----------------------------------------------------------
- *  Trading Simulator (Futuristic, Glassy, Responsive)
- *  - Non-sticky top "command dock" (replaces basic bar)
- *  - Neon/glass styling using your existing utilities
- *  - Live price line + multi-asset ticker (BTC/ETH/SOL/ICP)
- *  - Back button fixed to go to /dashboard
- *  - XL: 2/3 chart + 1/3 controls; Mobile: stacked
- * ---------------------------------------------------------- */
-
 type TickerMap = Record<string, number>;
 
 const TICKER_SYMBOLS = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "ICPUSDT"];
@@ -35,14 +28,10 @@ const TradingSimulator = () => {
   const [simulationMode, setSimulationMode] = useState<"live" | "paper">("live");
   const [currentEmotion, setCurrentEmotion] = useState("");
   const [livePrice, setLivePrice] = useState<number | null>(null);
-
-  // global ticker prices for the marquee
   const [tickerPrices, setTickerPrices] = useState<TickerMap>({});
-
-  // 24h change for the selected asset (for the header chip)
   const [change24h, setChange24h] = useState<number | null>(null);
 
-  /** Fetch selected asset live price (+ 24h change) */
+  // Fetch selected asset live price (+ 24h change)
   useEffect(() => {
     const pair = `${selectedAsset}USDT`.toUpperCase();
 
@@ -63,11 +52,10 @@ const TradingSimulator = () => {
     return () => clearInterval(id);
   }, [selectedAsset]);
 
-  /** Fetch multi-asset ticker prices (for the marquee) */
+  // Fetch multi-asset ticker prices
   useEffect(() => {
     const fetchTicker = async () => {
       try {
-        // Binance supports ?symbols=[...] as JSON; safer to request individually
         const results = await Promise.all(
           TICKER_SYMBOLS.map(async (s) => {
             const r = await axios.get(
@@ -89,23 +77,18 @@ const TradingSimulator = () => {
     return () => clearInterval(id);
   }, []);
 
-  /** header change badge info */
   const isUp = (change24h ?? 0) >= 0;
 
-  /** Build marquee items (duplicates for seamless loop) */
   const marqueeItems = useMemo(() => {
     const list = TICKER_SYMBOLS.map((s) => ({
       sym: s.replace("USDT", "/USDT"),
       price: tickerPrices[s],
     }));
-    // duplicate once for continuous loop
     return [...list, ...list];
   }, [tickerPrices]);
 
-  /** framer controls for slow marquee drift */
   const marqueeControls = useAnimationControls();
   useEffect(() => {
-    // Animate leftward forever
     marqueeControls.start({
       x: ["0%", "-50%"],
       transition: { duration: 30, ease: "linear", repeat: Infinity },
@@ -114,126 +97,125 @@ const TradingSimulator = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* ======= COMMAND DOCK (non-sticky) ======= */}
-      <div className="relative">
-        <div className="container mx-auto px-4 pt-6">
-          <div
-            className="
-              relative rounded-2xl border border-border/60 bg-card/50
-              backdrop-blur-xl
-              shadow-[0_0_40px_rgba(99,102,241,0.12)]
-              overflow-hidden
-            "
-          >
-            {/* glow ring */}
-            <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-primary/10" />
+      {/* HEADER */}
+      <div className="container mx-auto px-4 pt-6">
+        <div className="rounded-2xl border border-border/60 bg-card/50 backdrop-blur-xl shadow-lg overflow-hidden">
+          <div className="p-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-center gap-3">
+              {/* Mobile: icon-only */}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate("/dashboard")}
+                className="md:hidden rounded-full hover:bg-primary/10"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+              {/* Desktop: full button */}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate("/dashboard")}
+                className="hidden md:flex hover:bg-primary/10"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Dashboard
+              </Button>
 
-            {/* top row: back + titles + mode */}
-            <div className="flex flex-col gap-4 p-4 md:flex-row md:items-center md:justify-between">
-              <div className="flex items-center gap-3">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => navigate("/dashboard")}
-                  className="hover:bg-primary/10"
-                >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back to Dashboard
-                </Button>
-
-                <div className="hidden md:block h-6 w-px bg-border/60" />
-
-                <div>
-                  <h1 className="text-xl md:text-2xl font-bold tracking-tight">
-                    Trading Simulator
-                  </h1>
-                  <p className="text-xs md:text-sm text-muted-foreground">
-                    Practice executions, track emotions, and review performance.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                {/* mode badge (paper/live) */}
-                <span
-                  className={`
-                    inline-flex items-center rounded-md px-2.5 py-1 text-xs font-medium
-                    ${simulationMode === "live"
-                      ? "bg-primary/15 text-primary ring-1 ring-primary/20"
-                      : "bg-muted/40 text-foreground ring-1 ring-border/60"}
-                  `}
-                >
-                  {simulationMode === "live" ? "Live Mode" : "Paper Mode"}
-                </span>
-                {/* 24h change pill */}
-                {change24h !== null && (
-                  <span
-                    className={`
-                      inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-medium
-                      ${isUp ? "bg-success/15 text-success" : "bg-destructive/15 text-destructive"}
-                    `}
-                  >
-                    {isUp ? <TrendingUp className="h-3.5 w-3.5" /> : <TrendingDown className="h-3.5 w-3.5" />}
-                    {isUp ? "+" : ""}
-                    {change24h.toFixed(2)}%
-                    <span className="text-muted-foreground">/ 24h</span>
-                  </span>
-                )}
+              <div>
+                <h1 className="text-xl md:text-2xl font-bold tracking-tight">
+                  Trading Simulator
+                </h1>
+                <p className="text-xs md:text-sm text-muted-foreground">
+                  Practice executions, track emotions, and review performance.
+                </p>
               </div>
             </div>
 
-            {/* row 2: asset selector + live price */}
-            <div className="flex flex-col gap-3 px-4 pb-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-center gap-3">
+              <span
+                className={`px-2.5 py-1 rounded-md text-xs font-medium ${
+                  simulationMode === "live"
+                    ? "bg-primary/15 text-primary ring-1 ring-primary/20"
+                    : "bg-muted/40 text-foreground ring-1 ring-border/60"
+                }`}
+              >
+                {simulationMode === "live" ? "Live Mode" : "Paper Mode"}
+              </span>
+              {change24h !== null && (
+                <span
+                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium ${
+                    isUp
+                      ? "bg-success/15 text-success"
+                      : "bg-destructive/15 text-destructive"
+                  }`}
+                >
+                  {isUp ? (
+                    <TrendingUp className="h-3.5 w-3.5" />
+                  ) : (
+                    <TrendingDown className="h-3.5 w-3.5" />
+                  )}
+                  {isUp ? "+" : ""}
+                  {change24h.toFixed(2)}%
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Asset selector + price */}
+          <div className="flex flex-col gap-3 px-4 pb-4 md:flex-row md:items-center md:justify-between">
+            <div className="w-full md:w-auto">
               <AssetSelector
                 selectedAsset={selectedAsset}
-                onAssetChange={(a) => setSelectedAsset(a)}
+                onAssetChange={setSelectedAsset}
                 simulationMode={simulationMode}
                 onModeChange={(m) => setSimulationMode(m as "live" | "paper")}
               />
+            </div>
+            <div className="text-sm text-muted-foreground">
+              <span className="font-semibold text-foreground">
+                {selectedAsset}/USDT
+              </span>{" "}
+              {livePrice !== null ? (
+                `$${livePrice.toLocaleString(undefined, {
+                  maximumFractionDigits: 6,
+                })}`
+              ) : (
+                <span className="opacity-70">Loading…</span>
+              )}
+            </div>
+          </div>
 
-              <div className="text-sm text-muted-foreground">
-                <span className="font-semibold text-foreground">{selectedAsset}/USDT</span>{" "}
-                {livePrice !== null ? (
-                  <span>
-                    ${livePrice.toLocaleString(undefined, { maximumFractionDigits: 6 })}
+          {/* Price ticker */}
+          <div className="relative h-10 overflow-hidden border-t border-border/60 bg-background/40">
+            <motion.div
+              className="absolute left-0 top-0 flex h-10 w-[200%] items-center"
+              animate={marqueeControls}
+            >
+              {marqueeItems.map((item, idx) => (
+                <div
+                  key={`${item.sym}-${idx}`}
+                  className="mx-3 flex items-center gap-2 border border-border/50 bg-card/60 px-3 py-1 rounded-md text-xs font-mono"
+                >
+                  <span className="text-muted-foreground">{item.sym}</span>
+                  <span className="text-foreground">
+                    {item.price
+                      ? `$${item.price.toLocaleString(undefined, {
+                          maximumFractionDigits: 5,
+                        })}`
+                      : "—"}
                   </span>
-                ) : (
-                  <span className="opacity-70">Loading…</span>
-                )}
-              </div>
-            </div>
-
-            {/* TICKER: subtle neon glass track */}
-            <div className="relative h-10 overflow-hidden border-t border-border/60 bg-background/40">
-              <motion.div
-                className="absolute left-0 top-0 flex h-10 w-[200%] items-center"
-                animate={marqueeControls}
-              >
-                {marqueeItems.map((item, idx) => (
-                  <div
-                    key={`${item.sym}-${idx}`}
-                    className="
-                      mx-3 flex items-center gap-2 rounded-md
-                      border border-border/50 bg-card/60 px-3 py-1
-                      text-xs font-mono shadow-[0_0_14px_rgba(99,102,241,0.10)]
-                    "
-                  >
-                    <span className="text-muted-foreground">{item.sym}</span>
-                    <span className="text-foreground">
-                      {item.price ? `$${item.price.toLocaleString(undefined, { maximumFractionDigits: 5 })}` : "—"}
-                    </span>
-                  </div>
-                ))}
-              </motion.div>
-            </div>
+                </div>
+              ))}
+            </motion.div>
           </div>
         </div>
       </div>
 
-      {/* ======= MAIN GRID ======= */}
+      {/* MAIN CONTENT */}
       <div className="container mx-auto px-4 py-6">
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
-          {/* LEFT: Chart + History + Summary */}
+          {/* LEFT: Chart + History + Feedback */}
           <div className="xl:col-span-2 flex flex-col gap-6">
             <Card className="glass-card rounded-2xl p-3 md:p-4">
               <AdvancedTradingChart asset={selectedAsset} mode={simulationMode} />
@@ -242,6 +224,7 @@ const TradingSimulator = () => {
             <Card className="glass-card rounded-2xl p-3 md:p-4">
               <TradeHistory />
             </Card>
+
             <Card className="glass-card rounded-2xl p-3 md:p-4">
               <TradeFeedbackPanel currentEmotion={currentEmotion} />
             </Card>
@@ -270,7 +253,7 @@ const TradingSimulator = () => {
             </Card>
 
             <div className="hidden xl:block">
-              <Card className="glass-card rounded-2xl p-3 md:p-4">
+              <Card className="glass-card rounded-2xl p-3 md:p-4 h-full">
                 <PerformanceSummary />
               </Card>
             </div>
