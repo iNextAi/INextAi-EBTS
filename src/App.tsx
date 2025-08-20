@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import TradingSimulator from "./pages/TradingSimulator";
-import TradingSimulatorNew from "./pages/TradingSimulatorNew";
 import PortfolioPage from "./pages/PortfolioPage";
 import TradingJournal from "./pages/TradingJournal";
 import CopilotPage from "./pages/CopilotPage";
@@ -22,7 +21,6 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/trading" element={<TradingSimulator />} />
-          <Route path="/trading-new" element={<TradingSimulatorNew />} />
           <Route path="/portfolio" element={<PortfolioPage />} />
           <Route path="/journal" element={<TradingJournal />} />
           <Route path="/copilot" element={<CopilotPage />} />
