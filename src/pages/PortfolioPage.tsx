@@ -5,10 +5,10 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TrendingUp, TrendingDown, ArrowUpRight, ArrowDownLeft, Plus, Target, Calendar, PieChart, BarChart3, Eye, EyeOff } from "lucide-react";
-import btcIcon from "@/assets/btc-icon.png";
-import ethIcon from "@/assets/eth-icon.png";
-import solIcon from "@/assets/sol-icon.png";
-import usdtIcon from "@/assets/usdt-icon.png";
+import btcIcon from "@/assets/BTC.png";
+import ethIcon from "@/assets/ETH.png";
+import solIcon from "@/assets/SOL.png";
+import usdtIcon from "@/assets/USDT.png";
 import { useState } from "react";
 
 const PortfolioPage = () => {
