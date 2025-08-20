@@ -17,9 +17,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const sidebarItems = [
     { icon: TrendingUp, label: "Dashboard", path: "/", active: location.pathname === "/" },
     { icon: BarChart3, label: "Trading Journal", path: "/journal", active: location.pathname === "/journal" },
-    { icon: Zap, label: "Trading Simulator", path: "/trading-new", active: location.pathname === "/trading-new" },
+    { icon: Zap, label: "Trading Simulator", path: "/TradingSimulator", active: location.pathname === "/TradingSimulator" },
     { icon: PieChart, label: "Portfolio", path: "/portfolio", active: location.pathname === "/portfolio" },
-    { icon: Activity, label: "Performance", path: "/performance", active: location.pathname === "/performance" },
+    { icon: Activity, label: "Market", path: "/market", active: location.pathname === "/market" },
     { icon: Bot, label: "Copilot", path: "/copilot", active: location.pathname === "/copilot", customIcon: copilotLogo },
     { icon: Settings, label: "Settings", path: "/settings", active: location.pathname === "/settings" },
     { icon: User, label: "Profile", path: "/profile", active: location.pathname === "/profile" },

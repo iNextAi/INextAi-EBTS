@@ -30,7 +30,7 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
 
           {/* Your existing routes */}
-          <Route path="/trading" element={<TradingSimulator />} />
+          <Route path="/TradingSimulator" element={<TradingSimulator />} />
           <Route path="/portfolio" element={<PortfolioPage />} />
           <Route path="/journal" element={<TradingJournal />} />
           <Route path="/market" element={<MarketPage />} />
