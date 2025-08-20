@@ -7,6 +7,8 @@ import Index from "./pages/Index";
 import TradingSimulator from "./pages/TradingSimulator";
 import PortfolioPage from "./pages/PortfolioPage";
 import TradingJournal from "./pages/TradingJournal";
+import MarketPage from "./pages/MarketPage";
+import SettingsPage from "./pages/SettingsPage";
 import CopilotPage from "./pages/CopilotPage";
 import NotFound from "./pages/NotFound";
 import LandingPage from "./pages/LandingPage";
@@ -31,6 +33,8 @@ const App = () => (
           <Route path="/trading" element={<TradingSimulator />} />
           <Route path="/portfolio" element={<PortfolioPage />} />
           <Route path="/journal" element={<TradingJournal />} />
+          <Route path="/market" element={<MarketPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
           <Route path="/copilot" element={<CopilotPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
