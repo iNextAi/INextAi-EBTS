@@ -16,11 +16,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   
   const sidebarItems = [
     { icon: TrendingUp, label: "Dashboard", path: "/", active: location.pathname === "/" },
-    { icon: BarChart3, label: "Analytics", path: "/analytics", active: location.pathname === "/analytics" },
-    { icon: Zap, label: "Trading Simulator", path: "/trading", active: location.pathname === "/trading" },
+    { icon: BarChart3, label: "Trading Journal", path: "/journal", active: location.pathname === "/journal" },
+    { icon: Zap, label: "Trading Simulator", path: "/trading-new", active: location.pathname === "/trading-new" },
     { icon: PieChart, label: "Portfolio", path: "/portfolio", active: location.pathname === "/portfolio" },
     { icon: Activity, label: "Performance", path: "/performance", active: location.pathname === "/performance" },
-    { icon: Bot, label: "AI Copilot", path: "/copilot", active: location.pathname === "/copilot", customIcon: copilotLogo },
+    { icon: Bot, label: "Copilot", path: "/copilot", active: location.pathname === "/copilot", customIcon: copilotLogo },
     { icon: Settings, label: "Settings", path: "/settings", active: location.pathname === "/settings" },
     { icon: User, label: "Profile", path: "/profile", active: location.pathname === "/profile" },
   ];
@@ -129,8 +129,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               size="sm"
               className="glass-card px-3 py-1 rounded-lg hover:bg-white/10 transition-colors h-auto flex-col"
             >
-              <img src={copilotLogo} alt="AI Copilot" className="h-4 w-4 mb-1" />
-              <span className="text-xs text-muted-foreground">AI Copilot</span>
+              <img src={copilotLogo} alt="Copilot" className="h-4 w-4 mb-1" />
+              <span className="text-xs text-muted-foreground">Copilot</span>
             </Button>
             <ThemeToggle />
             <div className="w-8 h-8 gradient-primary rounded-full glow-primary flex items-center justify-center">
