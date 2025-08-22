@@ -22,7 +22,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     { icon: Activity, label: "Market", path: "/market", active: location.pathname === "/market" },
     { icon: Bot, label: "Copilot", path: "/copilot", active: location.pathname === "/copilot", customIcon: copilotLogo },
     { icon: Settings, label: "Settings", path: "/settings", active: location.pathname === "/settings" },
-    { icon: User, label: "Profile", path: "/profile", active: location.pathname === "/profile" },
   ];
 
   return (
