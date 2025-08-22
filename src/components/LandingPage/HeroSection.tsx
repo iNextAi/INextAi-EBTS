@@ -26,7 +26,7 @@ const HeroSection = () => {
           alt="iNextAi Logo"
           className="h-12 w-auto rounded-full"
           />
-          <span className="text-sm font-medium">Powered by ICP</span>
+           {/* <span className="text-sm font-medium">Powered by ICP</span> */}
           <img
           src={ICPLogo}
           alt="ICP Logo"
@@ -44,7 +44,7 @@ const HeroSection = () => {
             Your Gateway to <span className="text-primary neon-text">Emotion-Driven</span> AI Crypto Trading
           </p>
           
-          {/* CTAs */}
+          {/* CTAs 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
             <Button 
               size="lg" 
